@@ -1,5 +1,6 @@
 /**
  *	Copyright 2015 SmartThings
+ *  Copyright 2020 Przemysław Grondek
  *
  *	Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *	in compliance with the License. You may obtain a copy of the License at:
@@ -12,7 +13,7 @@
  *
  */
 metadata {
-	definition (name: "Z-Wave Metering Switch", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.switch", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false, genericHandler: "Z-Wave") {
+	definition (name: "Neo Coolcam Outlet", namespace: "pgrondek", author: "Przemysław Grondek", ocfDeviceType: "oic.d.switch", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false, genericHandler: "Z-Wave") {
 		capability "Energy Meter"
 		capability "Actuator"
 		capability "Switch"
@@ -25,33 +26,7 @@ metadata {
 
 		command "reset"
 
-		fingerprint inClusters: "0x25,0x32", deviceJoinName: "Switch"
-		fingerprint mfr: "0086", prod: "0003", model: "0012", deviceJoinName: "Aeotec Switch" //Aeotec Micro Smart Switch
-		fingerprint mfr: "021F", prod: "0003", model: "0087", deviceJoinName: "Dome Outlet", ocfDeviceType: "oic.d.smartplug" //Dome On/Off Plug-in Switch
-		fingerprint mfr: "0086", prod: "0103", model: "0060", deviceJoinName: "Aeotec Outlet", ocfDeviceType: "oic.d.smartplug"  //US //Aeotec Smart Switch 6
-		fingerprint mfr: "0086", prod: "0003", model: "0060", deviceJoinName: "Aeotec Outlet", ocfDeviceType: "oic.d.smartplug"  //EU //Aeotec Smart Switch 6
-		fingerprint mfr: "0086", prod: "0203", model: "0060", deviceJoinName: "Aeotec Outlet", ocfDeviceType: "oic.d.smartplug"  //AU //Aeotec Smart Switch 6
-		fingerprint mfr: "0086", prod: "0103", model: "0074", deviceJoinName: "Aeotec Switch" //Aeotec Nano Switch
-		fingerprint mfr: "0086", prod: "0003", model: "0074", deviceJoinName: "Aeotec Switch" //Aeotec Nano Switch
-		fingerprint mfr: "0086", prod: "0203", model: "0074", deviceJoinName: "Aeotec Switch" //AU //Aeotec Nano Switch
-		fingerprint mfr: "014F", prod: "574F", model: "3535", deviceJoinName: "GoControl Outlet", ocfDeviceType: "oic.d.smartplug" //GoControl Wall-Mounted Outlet
-		fingerprint mfr: "014F", prod: "5053", model: "3531", deviceJoinName: "GoControl Outlet", ocfDeviceType: "oic.d.smartplug" //GoControl Plug-in Switch
-		fingerprint mfr: "0063", prod: "4F44", model: "3031", deviceJoinName: "GE Switch" //GE Direct-Wire Outdoor Switch
 		fingerprint mfr: "0258", prod: "0003", model: "0087", deviceJoinName: "NEO Coolcam Outlet", ocfDeviceType: "oic.d.smartplug" //NEO Coolcam Power plug
-		fingerprint mfr: "010F", prod: "0602", model: "1001", deviceJoinName: "Fibaro Outlet", ocfDeviceType: "oic.d.smartplug" // EU //Fibaro Wall Plug ZW5
-		fingerprint mfr: "010F", prod: "1801", model: "1000", deviceJoinName: "Fibaro Outlet", ocfDeviceType: "oic.d.smartplug"// UK //Fibaro Wall Plug ZW5
-		fingerprint mfr: "0086", prod: "0003", model: "004E", deviceJoinName: "Aeotec Switch" //EU //Aeotec Heavy Duty Smart Switch
-		fingerprint mfr: "0086", prod: "0103", model: "004E", deviceJoinName: "Aeotec Switch" //US //Aeotec Heavy Duty Smart Switch
-		//zw:L type:1001 mfr:0258 prod:0003 model:1087 ver:3.94 zwv:4.05 lib:03 cc:5E,72,86,85,59,5A,73,70,25,27,71,32,20 role:05 ff:8700 ui:8700
-		fingerprint mfr: "0258", prod: "0003", model: "1087", deviceJoinName: "NEO Coolcam Outlet", ocfDeviceType: "oic.d.smartplug"  //EU //NEO Coolcam Power Plug
-		fingerprint mfr: "027A", prod: "0101", model: "000D", deviceJoinName: "Zooz Switch" //Zooz Power Switch
-		fingerprint mfr: "0159", prod: "0002", model: "0054", deviceJoinName: "Qubino Outlet", ocfDeviceType: "oic.d.smartplug" //Qubino Smart Plug
-		fingerprint mfr: "0371", prod: "0003", model: "00AF", deviceJoinName: "Aeotec Outlet", ocfDeviceType: "oic.d.smartplug"  //EU //Aeotec Smart Switch 7
-		fingerprint mfr: "0371", prod: "0103", model: "00AF", deviceJoinName: "Aeotec Outlet", ocfDeviceType: "oic.d.smartplug"  //US //Aeotec Smart Switch 7
-		fingerprint mfr: "0060", prod: "0004", model: "000B", deviceJoinName: "Everspring Outlet", ocfDeviceType: "oic.d.smartplug"  //US //Everspring Smart Plug
-		fingerprint mfr: "031E", prod: "0002", model: "0001", deviceJoinName: "Inovelli Switch" //US //Inovelli Switch Red Series
-		fingerprint mfr: "0154", prod: "0003", model: "000A", deviceJoinName: "POPP Outlet", ocfDeviceType: "oic.d.smartplug" //EU //POPP Smart Outdoor Plug
-		fingerprint mfr: "010F", prod: "1F01", model: "1000", deviceJoinName: "Fibaro Outlet", ocfDeviceType: "oic.d.smartplug" //EU //Fibaro walli Outlet //Fibaro Outlet
 	}
 
 	// simulator metadata
@@ -73,6 +48,13 @@ metadata {
 		reply "200100,delay 100,2502": "command: 2503, payload: 00"
 	}
 
+    preferences {
+        input "meterReportingInterval", "number",
+            title: "Interval of meter reporting settings",
+            defaultValue: meterReportingIntervalSetting,
+            required: false,
+            displayDuringSetup: true
+    }
 	// tile definitions
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
@@ -250,20 +232,9 @@ def configure() {
 
 	log.debug "Configure zwaveInfo: "+zwaveInfo
 
-	if (zwaveInfo.mfr == "0086") {	// Aeon Labs meter
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 80, size: 1, scaledConfigurationValue: 2)))	// basic report cc
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 101, size: 4, scaledConfigurationValue: 12)))	// report power in watts
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 111, size: 4, scaledConfigurationValue: 300)))	 // every 5 min
-	} else if (zwaveInfo.mfr == "010F" && zwaveInfo.prod == "1801" && zwaveInfo.model == "1000") { // Fibaro Wall Plug UK
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 11, size: 1, scaledConfigurationValue: 2))) // 2% power change results in report
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 13, size: 2, scaledConfigurationValue: 5*60))) // report every 5 minutes
-	} else if (zwaveInfo.mfr == "014F" && zwaveInfo.prod == "5053" && zwaveInfo.model == "3531") {
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 13, size: 2, scaledConfigurationValue: 15))) //report kWH every 15 min
-	} else if (zwaveInfo.mfr == "0154" && zwaveInfo.prod == "0003" && zwaveInfo.model == "000A") {
-		result << response(encap(zwave.configurationV1.configurationSet(parameterNumber: 25, size: 1, scaledConfigurationValue: 1))) //report every 1W change
-	}
 	result << response(encap(meterGet(scale: 0)))
 	result << response(encap(meterGet(scale: 2)))
+    result += updateConfig()
 	result
 }
 
@@ -332,4 +303,36 @@ private encap(physicalgraph.zwave.Command cmd) {
 
 private encapSequence(cmds, Integer delay=250) {
 	delayBetween(cmds.collect{ encap(it) }, delay)
+}
+
+// Configuration
+private getConfigData() {
+    return [
+        [paramNum:7, name: "Interval of meter reporting", value: meterReportingInterval, size: 1],
+    ]
+}
+
+private updateConfig() {
+    def cmds = []
+    configData.sort { it.paramNum }.each {
+        cmds += updateConfigVal(it.paramNum, it.size, it.value, refreshAll)
+    }
+    return delayBetween(cmds, 1000)
+}
+
+private updateConfigVal(paramNum, paramSize, val, refreshAll) {
+	def result = []
+	def configVal = state["configVal${paramNum}"]
+	
+	if (refreshAll || (configVal != val)) {
+		logDebug "#${paramNum}: changing ${configVal} to ${val}"
+		result << configSetCmd(paramNum, paramSize, val)
+		result << configGetCmd(paramNum)
+	}	
+	return result
+}
+
+// Settings
+private getMeterReportingIntervalSetting() {
+    return settings?.meterReportingInterval?.toInteger() ?: 300
 }
