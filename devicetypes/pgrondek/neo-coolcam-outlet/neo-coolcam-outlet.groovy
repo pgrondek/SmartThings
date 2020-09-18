@@ -13,7 +13,7 @@
  *
  */
 metadata {
-	definition (name: "Neo Coolcam Outlet", namespace: "pgrondek", author: "Przemysław Grondek", ocfDeviceType: "oic.d.switch", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false, genericHandler: "Z-Wave") {
+	definition (name: "Neo Coolcam Outlet", namespace: "pgrondek", author: "Przemysław Grondek", ocfDeviceType: "oic.d.switch", /* runLocally: false, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false, genericHandler: "Z-Wave" */) {
 		capability "Energy Meter"
 		capability "Actuator"
 		capability "Switch"
@@ -87,18 +87,11 @@ def installed() {
 	log.debug "installed()"
 	// Device-Watch simply pings if no device events received for 32min(checkInterval)
 	initialize()
-	if (zwaveInfo?.mfr?.equals("0063") || zwaveInfo?.mfr?.equals("014F")) { // These old GE devices have to be polled. GoControl Plug refresh status every 15 min.
-		runEvery15Minutes("poll", [forceForLocallyExecuting: true])
-	}
 }
 
 def updated() {
 	// Device-Watch simply pings if no device events received for 32min(checkInterval)
 	initialize()
-	if (zwaveInfo?.mfr?.equals("0063") || zwaveInfo?.mfr?.equals("014F")) { // These old GE devices have to be polled. GoControl Plug refresh status every 15 min.
-		unschedule("poll", [forceForLocallyExecuting: true])
-		runEvery15Minutes("poll", [forceForLocallyExecuting: true])
-	}
 	try {
 		if (!state.MSR) {
 			response(zwave.manufacturerSpecificV2.manufacturerSpecificGet().format())
@@ -139,14 +132,17 @@ def parse(String description) {
 }
 
 def handleMeterReport(cmd){
+	log.debug("handleMeterReport")
 	if (cmd.meterType == 1) {
-		if (cmd.scale == 0) {
-			createEvent(name: "energy", value: cmd.scaledMeterValue, unit: "kWh")
-		} else if (cmd.scale == 1) {
-			createEvent(name: "energy", value: cmd.scaledMeterValue, unit: "kVAh")
-		} else if (cmd.scale == 2) {
-			createEvent(name: "power", value: Math.round(cmd.scaledMeterValue), unit: "W")
-		}
+        if(cmd.scaledMeterValue >= 0 ){
+            if (cmd.scale == 0) {
+                createEvent(name: "energy", value: cmd.scaledMeterValue, unit: "kWh")
+            } else if (cmd.scale == 1) {
+                createEvent(name: "energy", value: cmd.scaledMeterValue, unit: "kVAh")
+            } else if (cmd.scale == 2) {
+                createEvent(name: "power", value: Math.round(cmd.scaledMeterValue), unit: "W")
+            }
+        }
 	}
 }
 
